@@ -1,0 +1,28 @@
+Language:
+C#
+
+Framework:
+.NET 8
+ASP.NET Core Web API
+
+Database:
+SQL Server (Azure SQL Database)
+
+ORM:
+EF Core
+
+Auth:
+ASP.NET Core Identity
+
+API: 
+Swagger
+
+Containers:
+Docker
+Azure App Service
+
+Testing:
+NUnit
+
+CI/CD:
+Github Actions
