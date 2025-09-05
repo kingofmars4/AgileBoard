@@ -1,13 +1,13 @@
 ﻿namespace AgileBoard.Domain.Entities
 {
-    public record User
+    public class User
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
 
         // Relations
-        public virtual ICollection<Project>? OwnedProjects { get; init; }
-        public virtual ICollection<Project>? ParticipatingProjects { get; init; }
-        public virtual ICollection<WorkItem>? AssignedWorkItems { get; init; }
+        public virtual ICollection<Project>? OwnedProjects { get; set; }
+        public virtual ICollection<Project>? ParticipatingProjects { get; set; }
+        public virtual ICollection<WorkItem>? AssignedWorkItems { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AgileBoard.Domain.Entities
 {
-    public record WorkItem
+    public class WorkItem
     {
         public enum WorkItemState
         {
@@ -9,20 +9,20 @@
             Done
         }
 
-        public int Id { get; init; }
-        public string? Name { get; init; }
-        public string? Description { get; init; }
-        public WorkItemState State { get; init; }
-        public int Index { get; init; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public WorkItemState State { get; set; }
+        public int Index { get; set; }
 
         // FKs
-        public int ProjectId { get; init; }
-        public int? SprintId { get; init; }
+        public int ProjectId { get; set; }
+        public int? SprintId { get; set; }
 
         // Relations
-        public virtual Project? Project { get; init; }
-        public virtual Sprint? Sprint { get; init; }
-        public virtual ICollection<User>? AssignedUsers { get; init; }
-        public virtual ICollection<Tag>? Tags { get; init; }
+        public virtual Project? Project { get; set; }
+        public virtual Sprint? Sprint { get; set; }
+        public virtual ICollection<User>? AssignedUsers { get; set; }
+        public virtual ICollection<Tag>? Tags { get; set; }
     }
 }

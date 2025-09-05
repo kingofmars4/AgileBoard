@@ -1,19 +1,19 @@
 ﻿namespace AgileBoard.Domain.Entities
 {
-    public record Project
+    public class Project
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
-        public string? Description { get; init; }
-        public DateTime CreationDate { get; init; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreationDate { get; set; }
 
         // FKs
-        public int OwnerId { get; init; }
+        public int OwnerId { get; set; }
 
         // Relations
-        public virtual User? Owner{ get; init; }
-        public virtual ICollection<User>? Participants { get; init; }
-        public virtual ICollection<WorkItem>? WorkItems { get; init; }
-        public virtual ICollection<Sprint>? Sprints { get; init; }
+        public virtual User? Owner{ get; set; }
+        public virtual ICollection<User>? Participants { get; set; }
+        public virtual ICollection<WorkItem>? WorkItems { get; set; }
+        public virtual ICollection<Sprint>? Sprints { get; set; }
     }
 }

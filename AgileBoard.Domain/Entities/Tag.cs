@@ -1,11 +1,11 @@
 ﻿namespace AgileBoard.Domain.Entities
 {
-    public record Tag
+    public class Tag
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
 
         // Relations
-        public virtual ICollection<WorkItem>? WorkItems { get; init; }
+        public virtual ICollection<WorkItem>? WorkItems { get; set; }
     }
 }

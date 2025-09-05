@@ -1,18 +1,18 @@
 ﻿namespace AgileBoard.Domain.Entities
 {
-    public record Sprint
+    public class Sprint
     {
-        public int Id { get; init; }
-        public string? Name { get; init; }
-        public string? Description { get; init; }
-        public DateTime StartDate { get; init; }
-        public DateTime EndDate { get; init; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         // FKs
-        public int ProjectId { get; init; }
+        public int ProjectId { get; set; }
 
         // Relations
-        public virtual Project? Project { get; init; }
-        public virtual ICollection<WorkItem>? WorkItems { get; init; }
+        public virtual Project? Project { get; set; }
+        public virtual ICollection<WorkItem>? WorkItems { get; set; }
     }
 }

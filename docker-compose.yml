@@ -1,0 +1,26 @@
+services:
+    agileboard.api:
+        image: ${DOCKER_REGISTRY-}agileboardapi
+        build:
+            context: .
+            dockerfile: AgileBoard.API/Dockerfile
+        ports:
+            - "8080:80"
+            - "8081:443"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=AgileBoardDb;User Id=SA;Password=Your_Strong_Password!;TrustServerCertificate=True
+        depends_on:
+            - sqlserver
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=Your_Strong_Password!
+        ports:
+            - "1433:1433"
+        volumes:
+            - mssql_data:/var/opt/mssql
+
+volumes:
+    mssql_data:
