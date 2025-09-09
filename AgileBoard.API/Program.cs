@@ -2,9 +2,12 @@ using AgileBoard.API.Mappers;
 using AgileBoard.Infrastructure;
 using AgileBoard.Infrastructure.Repositories.Implementations;
 using AgileBoard.Infrastructure.Repositories.Interfaces;
+using AgileBoard.Services.Security.Implementations;
+using AgileBoard.Services.Security.Interfaces;
 using AgileBoard.Services.Services.Implementations;
 using AgileBoard.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // DATABASE
@@ -12,11 +15,13 @@ builder.Services.AddDbContext<AgileBoardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // DI INJECTIONS
+    // PASSWORD HASHER 
+    builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
     // USERS
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IUserService, UserService>();
-    
+
     // PROJECTS
     builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
     builder.Services.AddScoped<IProjectService, ProjectService>();

@@ -1,5 +1,4 @@
 ﻿using AgileBoard.API.DTOs;
-using AgileBoard.Domain.Entities;
 using AgileBoard.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -7,27 +6,31 @@ using Microsoft.IdentityModel.Tokens;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class UsersController(IUserService userService, IMapper mapper) : ControllerBase
 {
-    private readonly IUserService _userService;
-    private readonly IMapper _mapper;
+    private readonly IUserService _userService = userService;
+    private readonly IMapper _mapper = mapper;
 
-    public UsersController(IUserService userService, IMapper mapper)
-    {
-        _userService = userService;
-        _mapper = mapper;
-    }
-
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<IActionResult> CreateUser(CreateUserDTO createUserDto)
     {
-        var newUser = _mapper.Map<User>(createUserDto);
+        try
+        {
+            var newUser = await _userService.RegisterUserAsync(createUserDto.Username, createUserDto.Email, createUserDto.Password);
 
-        var createdUser = await _userService.CreateUserAsync(newUser);
+            var userDto = _mapper.Map<UserDTO>(newUser);
 
-        var userDto = _mapper.Map<UserDTO>(createdUser);
+            return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, userDto);
 
-        return Ok(userDto);
+        } 
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while registering the user.");
+        }
     }
 
     [HttpGet]

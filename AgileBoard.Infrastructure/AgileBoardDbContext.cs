@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgileBoard.Infrastructure
 {
-    public class AgileBoardDbContext : DbContext
+    public class AgileBoardDbContext(DbContextOptions<AgileBoardDbContext> options) : DbContext(options)
     {
-        public AgileBoardDbContext(DbContextOptions<AgileBoardDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
