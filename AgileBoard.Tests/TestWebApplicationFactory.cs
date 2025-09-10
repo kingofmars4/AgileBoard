@@ -6,6 +6,13 @@ namespace AgileBoard.Tests
 {
     public class TestWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
+        private readonly string _testDatabaseName;
+
+        public TestWebApplicationFactory()
+        {
+            _testDatabaseName = $"AgileBoardTestDb_{Guid.NewGuid():N}";
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
@@ -30,13 +37,54 @@ namespace AgileBoard.Tests
                     services.Remove(service);
                 }
 
+                var connectionString = $"Server=(localdb)\\mssqllocaldb;Database={_testDatabaseName};Trusted_Connection=true;MultipleActiveResultSets=true";
+
                 services.AddDbContext<AgileBoardDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}");
+                    options.UseSqlServer(connectionString)
+                           .EnableSensitiveDataLogging()
+                           .LogTo(Console.WriteLine, LogLevel.Information);
                 });
+                
+                services.AddLogging(builder => builder.AddConsole());
             });
 
             builder.UseEnvironment("Testing");
+        }
+
+        public async Task InitializeDatabaseAsync()
+        {
+            using var scope = Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
+            
+            await context.Database.EnsureCreatedAsync();
+        }
+
+        public async Task CleanupDatabaseAsync()
+        {
+            using var scope = Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
+            
+            await context.Database.EnsureDeletedAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    using var scope = Services.CreateScope();
+                    var context = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
+                    context.Database.EnsureDeleted();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error cleaning up test database: {ex.Message}");
+                }
+            }
+            
+            base.Dispose(disposing);
         }
     }
 }

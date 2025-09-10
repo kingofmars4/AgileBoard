@@ -89,13 +89,30 @@ namespace AgileBoard.Tests
             var user1 = new CreateUserDTO("user1", "user1@example.com", "Password1!");
             var user2 = new CreateUserDTO("user2", "user2@example.com", "Password2!");
 
-            await _client.PostAsJsonAsync("/api/users/register", user1);
-            await _client.PostAsJsonAsync("/api/users/register", user2);
+            var registerResponse1 = await _client.PostAsJsonAsync("/api/users/register", user1);
+            var registerResponse2 = await _client.PostAsJsonAsync("/api/users/register", user2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(registerResponse1.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+                Assert.That(registerResponse2.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+            });
 
             var login1 = await _client.PostAsJsonAsync("/api/users/login",
                 new LoginUserDTO("user1", "Password1!"));
             var login2 = await _client.PostAsJsonAsync("/api/users/login",
                 new LoginUserDTO("user2", "Password2!"));
+
+            if (login1.StatusCode != HttpStatusCode.OK)
+            {
+                var errorContent1 = await login1.Content.ReadAsStringAsync();
+                Console.WriteLine($"Login1 Error: {errorContent1}");
+            }
+            
+            if (login2.StatusCode != HttpStatusCode.OK)
+            {
+                var errorContent2 = await login2.Content.ReadAsStringAsync();
+                Console.WriteLine($"Login2 Error: {errorContent2}");
+            }
 
             Assert.Multiple(() =>
             {
@@ -126,6 +143,49 @@ namespace AgileBoard.Tests
                 new LoginUserDTO("specialuser", complexPassword));
 
             Assert.That(loginResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task Debug_UserRegistrationAndLogin()
+        {
+            using var scope = _factory.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
+            
+            var initialUserCount = context.Users.Count();
+            Console.WriteLine($"Initial user count: {initialUserCount}");
+
+            var createUserDto = new CreateUserDTO("debuguser", "debug@example.com", "DebugPassword123!");
+            var registerResponse = await _client.PostAsJsonAsync("/api/users/register", createUserDto);
+            
+            Console.WriteLine($"Register Status: {registerResponse.StatusCode}");
+            var registerContent = await registerResponse.Content.ReadAsStringAsync();
+            Console.WriteLine($"Register Content: {registerContent}");
+
+            var userCount = context.Users.Count();
+            Console.WriteLine($"User count after registration: {userCount}");
+            
+            var createdUser = context.Users.FirstOrDefault(u => u.Username == "debuguser");
+            Console.WriteLine($"User created: {createdUser != null}");
+            
+            if (createdUser != null)
+            {
+                Console.WriteLine($"User ID: {createdUser.Id}, Username: {createdUser.Username}");
+                Console.WriteLine($"Password Hash Length: {createdUser.PasswordHash?.Length}");
+                Console.WriteLine($"Salt Length: {createdUser.PasswordSalt?.Length}");
+            }
+
+            var loginDto = new LoginUserDTO("debuguser", "DebugPassword123!");
+            var loginResponse = await _client.PostAsJsonAsync("/api/users/login", loginDto);
+            
+            Console.WriteLine($"Login Status: {loginResponse.StatusCode}");
+            var loginContent = await loginResponse.Content.ReadAsStringAsync();
+            Console.WriteLine($"Login Content: {loginContent}");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(registerResponse.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+                Assert.That(loginResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            });
         }
     }
 }
