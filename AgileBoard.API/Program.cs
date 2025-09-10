@@ -26,7 +26,6 @@ builder.Services.AddDbContext<AgileBoardDbContext>(options =>
     builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
     builder.Services.AddScoped<IProjectService, ProjectService>();
 
-
 // CONFIG
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
@@ -36,9 +35,12 @@ builder.Services.AddSwaggerGen();
 // BUILDING
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
-dbContext.Database.Migrate();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
+    dbContext.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -53,3 +55,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+namespace AgileBoard.API
+{
+    public partial class Program { }
+}

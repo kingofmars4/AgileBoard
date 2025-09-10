@@ -2,4 +2,5 @@
 {
     public record UserDTO(int ID, string Username);
     public record CreateUserDTO(string Username, string Email, string Password);
+    public record LoginUserDTO(string Username, string Password);
 }

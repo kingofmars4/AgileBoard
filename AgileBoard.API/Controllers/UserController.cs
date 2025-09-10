@@ -11,6 +11,24 @@ public class UsersController(IUserService userService, IMapper mapper) : Control
     private readonly IUserService _userService = userService;
     private readonly IMapper _mapper = mapper;
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginUserDTO loginDto)
+    {
+        try
+        {
+            var isValid = await _userService.VerifiyLoginAsync(loginDto.Username, loginDto.Password);
+            
+            if (!isValid)
+                return Unauthorized("Invalid username or password.");
+
+            return Ok(new { Message = "Login successful", loginDto.Username });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred during login.");
+        }
+    }
+
     [HttpPost("register")]
     public async Task<IActionResult> CreateUser(CreateUserDTO createUserDto)
     {
