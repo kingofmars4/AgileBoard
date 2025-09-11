@@ -1,5 +1,8 @@
 ﻿namespace AgileBoard.API.DTOs
 {
-    public record UserDTO(int ID, string Name);
-    public record CreateUserDTO(string Name);
+    public record UserDTO(int ID, string Username, string Email);
+    public record CreateUserDTO(string Username, string Email, string Password);
+    public record LoginUserDTO(string Username, string Password);
+    public record UpdateUserDTO(string? Username, string? Email);
+    public record ChangePasswordDTO(string CurrentPassword, string NewPassword);
 }

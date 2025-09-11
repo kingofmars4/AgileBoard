@@ -9,18 +9,20 @@ services:
             - "8081:443"
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=AgileBoardDb;User Id=SA;Password=Your_Strong_Password!;TrustServerCertificate=True
+            - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=AgileBoardDb;User Id=SA;Password=Password_Mt_Forte;TrustServerCertificate=True
         depends_on:
             - sqlserver
+
     sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
         environment:
-            - ACCEPT_EULA=Y
-            - SA_PASSWORD=Your_Strong_Password!
+          - ACCEPT_EULA=Y
+          - MSSQL_SA_PASSWORD=Password_Mt_Forte
         ports:
-            - "1433:1433"
+          - "1433:1433"
         volumes:
-            - mssql_data:/var/opt/mssql
+          - sqlserver_data:/var/opt/mssql
+        container_name: agileboard-sqlserver
 
 volumes:
-    mssql_data:
+    sqlserver_data:
