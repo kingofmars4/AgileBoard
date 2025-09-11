@@ -1,6 +1,6 @@
 ﻿using AgileBoard.Services.Security.Implementations;
 
-namespace AgileBoard.Tests
+namespace AgileBoard.Tests.Users
 {
     public class PasswordHasherTests
     {

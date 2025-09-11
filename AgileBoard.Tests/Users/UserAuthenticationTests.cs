@@ -3,7 +3,7 @@ using AgileBoard.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
-namespace AgileBoard.Tests
+namespace AgileBoard.Tests.Users
 {
     [TestFixture]
     public class UserAuthenticationTests
@@ -187,5 +187,7 @@ namespace AgileBoard.Tests
                 Assert.That(loginResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             });
         }
+
+        
     }
 }

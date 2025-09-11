@@ -16,7 +16,7 @@ public class UsersController(IUserService userService, IMapper mapper) : Control
     {
         try
         {
-            var isValid = await _userService.VerifiyLoginAsync(loginDto.Username, loginDto.Password);
+            var isValid = await _userService.VerifyLoginAsync(loginDto.Username, loginDto.Password);
             
             if (!isValid)
                 return Unauthorized("Invalid username or password.");
@@ -61,14 +61,74 @@ public class UsersController(IUserService userService, IMapper mapper) : Control
         return Ok(usersDTOs);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<UserDTO>> GetUserById(int id)
     {
         var user = await _userService.GetUserByIdAsync(id);
         if (user == null) return NotFound();
-        
+
         var userDto = _mapper.Map<UserDTO>(user);
         return Ok(userDto);
     }
 
+    [HttpGet("by-username/{username}")]
+    public async Task<ActionResult<UserDTO>> GetUserByUsername(string username)
+    {
+        var user = await _userService.GetUserByUsernameAsync(username);
+        if (user == null) return NotFound();
+
+        var userDto = _mapper.Map<UserDTO>(user);
+        return Ok(userDto);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateUser(int id, UpdateUserDTO updateUserDto)
+    {
+        try
+        {
+            var updatedUser = await _userService.UpdateUserAsync(id, updateUserDto.Username, updateUserDto.Email);
+            var userDto = _mapper.Map<UserDTO>(updatedUser);
+
+            return Ok(userDto);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound("User not found.");
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while updating the user.");
+        }
+    }
+
+    [HttpPut("{id:int}/change-password")]
+    public async Task<IActionResult> ChangePassword(int id, ChangePasswordDTO changePasswordDto)
+    {
+        try
+        {
+            await _userService.ChangePasswordAsync(id, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+
+            return Ok(new { Message = "Password changed successfully." });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error occurred while changing the password.");
+        }
+    }
 }

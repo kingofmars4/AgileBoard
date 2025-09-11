@@ -11,6 +11,26 @@ namespace AgileBoard.Services.Services.Implementations
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
+        public Task<bool> ChangePasswordAsync(int id, string currentPassword, string newPassword)
+        {
+            var user = _userRepository.GetUserByIdAsync(id);
+
+            if (user == null || user.Result == null)
+                throw new KeyNotFoundException("User not found.");
+
+            if (newPassword.Length < 6)
+                throw new ArgumentException("New password must be at least 6 characters long.");
+
+            if (!_passwordHasher.VerifyPassword(currentPassword, user.Result.PasswordHash, user.Result.PasswordSalt))
+                throw new UnauthorizedAccessException("Current password is incorrect.");
+
+            if (_passwordHasher.VerifyPassword(newPassword, user.Result.PasswordHash, user.Result.PasswordSalt))
+                throw new ArgumentException("New password must be different from the current password.");
+
+            var (hashedPassword, salt) = _passwordHasher.HashPassword(newPassword);
+            return _userRepository.ChangePasswordAsync(id, hashedPassword, salt);
+        }
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _userRepository.GetAllUsersAsync();
@@ -18,8 +38,12 @@ namespace AgileBoard.Services.Services.Implementations
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
-            return user ?? throw new KeyNotFoundException("User not found.");
+            return await _userRepository.GetUserByIdAsync(id);
+        }
+
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await _userRepository.GetUserByUserameAsync(username);
         }
 
         public async Task<User> RegisterUserAsync(string username, string email, string password)
@@ -45,7 +69,16 @@ namespace AgileBoard.Services.Services.Implementations
             return await _userRepository.AddUserAsync(newUser);
         }
 
-        public async Task<bool> VerifiyLoginAsync(string username, string password)
+        public async Task<User> UpdateUserAsync(int id, string? username, string? email)
+        {
+            if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(email))
+                throw new ArgumentException("At least one of username or email must be provided for update.");
+
+            return await _userRepository.UpdateUserAsync(id, username, email) 
+                ?? throw new KeyNotFoundException("User not found.");
+        }
+
+        public async Task<bool> VerifyLoginAsync(string username, string password)
         {
             var user = await _userRepository.GetUserByUserameAsync(username);
             if (user == null)
