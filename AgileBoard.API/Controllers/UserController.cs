@@ -1,8 +1,9 @@
 ﻿using AgileBoard.API.DTOs;
+using AgileBoard.API.Extensions;
+using AgileBoard.Domain.Constants;
 using AgileBoard.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -14,121 +15,82 @@ public class UsersController(IUserService userService, IMapper mapper) : Control
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserDTO loginDto)
     {
-        try
-        {
-            var isValid = await _userService.VerifyLoginAsync(loginDto.Username, loginDto.Password);
-            
-            if (!isValid)
-                return Unauthorized("Invalid username or password.");
+        var result = await _userService.VerifyLoginAsync(loginDto.Username, loginDto.Password);
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-            return Ok(new { Message = "Login successful", loginDto.Username });
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "An error occurred during login.");
-        }
+        return Ok(new { Message = Messages.Authentication.LoginSuccessful, loginDto.Username });
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> CreateUser(CreateUserDTO createUserDto)
     {
-        try
-        {
-            var newUser = await _userService.RegisterUserAsync(createUserDto.Username, createUserDto.Email, createUserDto.Password);
+        var result = await _userService.RegisterUserAsync(createUserDto.Username, createUserDto.Email, createUserDto.Password);
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-            var userDto = _mapper.Map<UserDTO>(newUser);
-
-            return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, userDto);
-
-        } 
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "An error occurred while registering the user.");
-        }
+        var userDto = _mapper.Map<UserDTO>(result.Data);
+        return CreatedAtAction(nameof(GetUserById), new { id = result.Data!.Id }, userDto);
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers()
     {
-        var users = await _userService.GetAllUsersAsync();
-        if (users.IsNullOrEmpty()) return NotFound();
+        var result = await _userService.GetAllUsersAsync();
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-        var usersDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
+        var usersDTOs = _mapper.Map<IEnumerable<UserDTO>>(result.Data);
         return Ok(usersDTOs);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<UserDTO>> GetUserById(int id)
+    public async Task<IActionResult> GetUserById(int id)
     {
-        var user = await _userService.GetUserByIdAsync(id);
-        if (user == null) return NotFound();
+        var result = await _userService.GetUserByIdAsync(id);
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-        var userDto = _mapper.Map<UserDTO>(user);
+        var userDto = _mapper.Map<UserDTO>(result.Data);
         return Ok(userDto);
     }
 
     [HttpGet("by-username/{username}")]
-    public async Task<ActionResult<UserDTO>> GetUserByUsername(string username)
+    public async Task<IActionResult> GetUserByUsername(string username)
     {
-        var user = await _userService.GetUserByUsernameAsync(username);
-        if (user == null) return NotFound();
+        var result = await _userService.GetUserByUsernameAsync(username);
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-        var userDto = _mapper.Map<UserDTO>(user);
+        var userDto = _mapper.Map<UserDTO>(result.Data);
         return Ok(userDto);
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateUser(int id, UpdateUserDTO updateUserDto)
     {
-        try
-        {
-            var updatedUser = await _userService.UpdateUserAsync(id, updateUserDto.Username, updateUserDto.Email);
-            var userDto = _mapper.Map<UserDTO>(updatedUser);
+        var result = await _userService.UpdateUserAsync(id, updateUserDto.Username, updateUserDto.Email);
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-            return Ok(userDto);
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound("User not found.");
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "An error occurred while updating the user.");
-        }
+        var userDto = _mapper.Map<UserDTO>(result.Data);
+        return Ok(userDto);
     }
 
     [HttpPut("{id:int}/change-password")]
     public async Task<IActionResult> ChangePassword(int id, ChangePasswordDTO changePasswordDto)
     {
-        try
-        {
-            await _userService.ChangePasswordAsync(id, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+        var result = await _userService.ChangePasswordAsync(id, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+        
+        var errorResult = result.ToActionResultIfFailed(this);
+        if (errorResult != null) return errorResult;
 
-            return Ok(new { Message = "Password changed successfully." });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, "An error occurred while changing the password.");
-        }
+        return Ok(new { Message = Messages.PasswordChange.PasswordChangedSuccessfully });
     }
 }

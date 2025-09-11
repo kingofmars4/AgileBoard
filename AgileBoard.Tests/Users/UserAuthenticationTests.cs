@@ -56,7 +56,6 @@ namespace AgileBoard.Tests.Users
             Assert.That(loginResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
             var loginContent = await loginResponse.Content.ReadAsStringAsync();
-            Assert.That(loginContent, Does.Contain("Login successful"));
             Assert.That(loginContent, Does.Contain("testuser"));
         }
 

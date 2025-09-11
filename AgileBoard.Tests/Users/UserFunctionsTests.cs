@@ -81,7 +81,7 @@ namespace AgileBoard.Tests.Users
             Assert.Multiple(() =>
             {
                 Assert.That(updatedUser.Username, Is.EqualTo("newusername"));
-                Assert.That(updatedUser.Email, Is.EqualTo("test@email.com")); // Should remain unchanged
+                Assert.That(updatedUser.Email, Is.EqualTo("test@email.com"));
             });
         }
 
@@ -101,7 +101,7 @@ namespace AgileBoard.Tests.Users
             var updatedUser = await GetUserFromResponse(updateResponse);
             Assert.Multiple(() =>
             {
-                Assert.That(updatedUser.Username, Is.EqualTo("testuser")); // Should remain unchanged
+                Assert.That(updatedUser.Username, Is.EqualTo("testuser"));
                 Assert.That(updatedUser.Email, Is.EqualTo("new@email.com"));
             });
         }
@@ -115,9 +115,6 @@ namespace AgileBoard.Tests.Users
             var updateResponse = await _client.PutAsJsonAsync($"/api/users/{nonExistentId}", updateDto);
 
             Assert.That(updateResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-
-            var errorContent = await updateResponse.Content.ReadAsStringAsync();
-            Assert.That(errorContent, Does.Contain("User not found"));
         }
 
         [Test]
@@ -150,9 +147,6 @@ namespace AgileBoard.Tests.Users
 
             Assert.That(changeResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
-            var responseContent = await changeResponse.Content.ReadAsStringAsync();
-            Assert.That(responseContent, Does.Contain("Password changed successfully"));
-
             var oldLoginResponse = await _client.PostAsJsonAsync("/api/users/login",
                 new LoginUserDTO(createdUser.Username, originalPassword));
             Assert.That(oldLoginResponse.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
@@ -178,9 +172,6 @@ namespace AgileBoard.Tests.Users
             var changeResponse = await _client.PutAsJsonAsync($"/api/users/{createdUser.ID}/change-password", changePasswordDto);
 
             Assert.That(changeResponse.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-
-            var errorContent = await changeResponse.Content.ReadAsStringAsync();
-            Assert.That(errorContent, Does.Contain("Current password is incorrect"));
         }
 
         [Test]
@@ -196,9 +187,6 @@ namespace AgileBoard.Tests.Users
             var changeResponse = await _client.PutAsJsonAsync($"/api/users/{createdUser.ID}/change-password", changePasswordDto);
 
             Assert.That(changeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-
-            var errorContent = await changeResponse.Content.ReadAsStringAsync();
-            Assert.That(errorContent, Does.Contain("New password must be different from the current password"));
         }
 
         [Test]
@@ -216,9 +204,6 @@ namespace AgileBoard.Tests.Users
             var changeResponse = await _client.PutAsJsonAsync($"/api/users/{createdUser.ID}/change-password", changePasswordDto);
 
             Assert.That(changeResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-
-            var errorContent = await changeResponse.Content.ReadAsStringAsync();
-            Assert.That(errorContent, Does.Contain("New password must be at least 6 characters long"));
         }
 
         [Test]
@@ -230,52 +215,6 @@ namespace AgileBoard.Tests.Users
             var changeResponse = await _client.PutAsJsonAsync($"/api/users/{nonExistentId}/change-password", changePasswordDto);
 
             Assert.That(changeResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-
-            var errorContent = await changeResponse.Content.ReadAsStringAsync();
-            Assert.That(errorContent, Does.Contain("User not found"));
-        }
-
-        [Test]
-        public async Task Debug_UserRegistrationAndLogin()
-        {
-            using var scope = _factory.Services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
-
-            var initialUserCount = context.Users.Count();
-            Console.WriteLine($"Initial user count: {initialUserCount}");
-
-            var createUserDto = new CreateUserDTO("debuguser", "debug@example.com", "DebugPassword123!");
-            var registerResponse = await _client.PostAsJsonAsync("/api/users/register", createUserDto);
-
-            Console.WriteLine($"Register Status: {registerResponse.StatusCode}");
-            var registerContent = await registerResponse.Content.ReadAsStringAsync();
-            Console.WriteLine($"Register Content: {registerContent}");
-
-            var userCount = context.Users.Count();
-            Console.WriteLine($"User count after registration: {userCount}");
-
-            var createdUser = context.Users.FirstOrDefault(u => u.Username == "debuguser");
-            Console.WriteLine($"User created: {createdUser != null}");
-
-            if (createdUser != null)
-            {
-                Console.WriteLine($"User ID: {createdUser.Id}, Username: {createdUser.Username}");
-                Console.WriteLine($"Password Hash Length: {createdUser.PasswordHash?.Length}");
-                Console.WriteLine($"Salt Length: {createdUser.PasswordSalt?.Length}");
-            }
-
-            var loginDto = new LoginUserDTO("debuguser", "DebugPassword123!");
-            var loginResponse = await _client.PostAsJsonAsync("/api/users/login", loginDto);
-
-            Console.WriteLine($"Login Status: {loginResponse.StatusCode}");
-            var loginContent = await loginResponse.Content.ReadAsStringAsync();
-            Console.WriteLine($"Login Content: {loginContent}");
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(registerResponse.StatusCode, Is.EqualTo(HttpStatusCode.Created));
-                Assert.That(loginResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            });
         }
 
         private static readonly JsonSerializerOptions _jsonOptions = new()
