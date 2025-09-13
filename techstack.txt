@@ -12,7 +12,7 @@ ORM:
 EF Core
 
 Auth:
-ASP.NET Core Identity
+JWT
 
 API: 
 Swagger

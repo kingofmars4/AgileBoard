@@ -6,7 +6,10 @@ using AgileBoard.Services.Security.Implementations;
 using AgileBoard.Services.Security.Interfaces;
 using AgileBoard.Services.Services.Implementations;
 using AgileBoard.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +17,34 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AgileBoardDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// JWT AUTHENTICATION
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT Secret Key is not configured.");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings["Issuer"] ?? "AgileBoard",
+            ValidateAudience = true,
+            ValidAudience = jwtSettings["Audience"] ?? "AgileBoard",
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+
 // DI INJECTIONS
-    // PASSWORD HASHER 
+    // SECURITY
     builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+    builder.Services.AddScoped<IJwtService, JwtService>();
+    builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
     // USERS
     builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -50,6 +78,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
