@@ -2,6 +2,11 @@
 {
     public static class Messages
     {
+        public static class Authorization
+        {
+            public const string CheckFailed = "Authorization check failed.";
+            public const string AccessDenied = "Access denied.";
+        }
         public static class Authentication
         {
             public const string InvalidCredentials = "Invalid username or password.";
@@ -23,6 +28,7 @@
             public const string UserUpdatedSuccessfully = "User updated successfully.";
             public const string UpdateErrorGeneric = "An error occurred while updating the user.";
             public const string AtLeastOneFieldRequired = "At least one of username or email must be provided for update.";
+            public const string NoPermissionToUpdate = "You do not have permission to update this user.";
         }
 
         public static class PasswordChange
@@ -32,8 +38,14 @@
             public const string CurrentPasswordIncorrect = "Current password is incorrect.";
             public const string NewPasswordMustBeDifferent = "New password must be different from the current password.";
             public const string PasswordMinimumLength = "New password must be at least 6 characters long.";
+            public const string NoPermissionToChangePassword = "You do not have permission to change this password.";
         }
 
+        public static class ProjectRetrieval
+        {
+            public const string ProjectNotFound = "Project not found.";
+            public const string ProjectRetrievalErrorGeneric = "An error occurred while retrieving project information.";
+        }
         public static class UserRetrieval
         {
             public const string UserNotFound = "User not found.";

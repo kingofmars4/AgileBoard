@@ -7,23 +7,25 @@ using AgileBoard.Services.Services.Interfaces;
 
 namespace AgileBoard.Services.Services.Implementations
 {
-    public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher) 
+    public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtService jwtService) 
         : IUserService
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
+        private readonly IJwtService _jwtService = jwtService;
 
-        public async Task<Result> VerifyLoginAsync(string username, string password)
+        public async Task<Result<(User User, string Token)>> VerifyLoginAsync(string username, string password)
         {
             var user = await _userRepository.GetUserByUserameAsync(username);
             if (user == null)
-                return Result.Unauthorized(Messages.Authentication.InvalidCredentials);
+                return Result<(User, string)>.Unauthorized(Messages.Authentication.InvalidCredentials);
 
             var isValid = _passwordHasher.VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
             if (!isValid)
-                return Result.Unauthorized(Messages.Authentication.InvalidCredentials);
+                return Result<(User, string)>.Unauthorized(Messages.Authentication.InvalidCredentials);
 
-            return Result.Success();
+            var token = _jwtService.GenerateToken(user);
+            return Result<(User, string)>.Success((user, token));
         }
 
         public async Task<Result<User>> GetUserByIdAsync(int id)
@@ -77,10 +79,7 @@ namespace AgileBoard.Services.Services.Implementations
                 var createdUser = await _userRepository.AddUserAsync(newUser);
                 return Result<User>.Success(createdUser);
             }
-            catch (Exception)
-            {
-                return Result<User>.Failure("Database error occurred");
-            }
+            catch (Exception) { return Result<User>.Failure(Messages.Generic.InternalServerError); }
         }
 
         public async Task<Result<User>> UpdateUserAsync(int id, string? username, string? email)
@@ -96,10 +95,7 @@ namespace AgileBoard.Services.Services.Implementations
 
                 return Result<User>.Success(updatedUser);
             }
-            catch (Exception)
-            {
-                return Result<User>.Failure("Database error occurred");
-            }
+            catch (Exception) { return Result<User>.Failure(Messages.Generic.InternalServerError); }
         }
 
         public async Task<Result> ChangePasswordAsync(int id, string currentPassword, string newPassword)
