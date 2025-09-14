@@ -1,3 +1,5 @@
+using AgileBoard.Domain.Constants;
+
 namespace AgileBoard.Domain.Common
 {
     public class Result<T>
@@ -22,6 +24,10 @@ namespace AgileBoard.Domain.Common
             
         public static Result<T> NotFound(string errorMessage) 
             => new(false, default, errorMessage, "NotFound");
+        public static Result<T> NotFound(string entityName, bool isPlural = false) 
+            => new(false, default, 
+                isPlural ? Messages.Generic.NotFoundPlural(entityName) : Messages.Generic.NotFound(entityName), 
+                "NotFound");
             
         public static Result<T> BadRequest(string errorMessage) 
             => new(false, default, errorMessage, "BadRequest");
@@ -53,6 +59,11 @@ namespace AgileBoard.Domain.Common
             
         public static Result NotFound(string errorMessage) 
             => new(false, errorMessage, "NotFound");
+            
+        public static Result NotFound(string entityName, bool isPlural = false) 
+            => new(false, 
+                isPlural ? Messages.Generic.NotFoundPlural(entityName) : Messages.Generic.NotFound(entityName), 
+                "NotFound");
             
         public static Result BadRequest(string errorMessage) 
             => new(false, errorMessage, "BadRequest");

@@ -16,11 +16,11 @@ namespace AgileBoard.Services.Security.Implementations
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null)
-                return Result<bool>.Unauthorized(Messages.UserRetrieval.UserNotFound);
+                return Result<bool>.Unauthorized(Messages.Generic.NotFound(Messages.EntityNames.User));
 
             var project = await _projectRepository.GetProjectByIdAsync(projectId);
             if (project == null)
-                return Result<bool>.NotFound(Messages.ProjectRetrieval.ProjectNotFound);
+                return Result<bool>.NotFound(Messages.EntityNames.Project);
 
             var canAccess = 
                 project.OwnerId == userId || // User is owner
@@ -33,11 +33,11 @@ namespace AgileBoard.Services.Security.Implementations
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null)
-                return Result<bool>.Unauthorized(Messages.UserRetrieval.UserNotFound);
+                return Result<bool>.Unauthorized(Messages.Generic.NotFound(Messages.EntityNames.User));
 
             var project = await _projectRepository.GetProjectByIdAsync(projectId);
             if (project == null)
-                return Result<bool>.NotFound(Messages.ProjectRetrieval.ProjectNotFound);
+                return Result<bool>.NotFound(Messages.EntityNames.Project);
 
             var canModify = project.OwnerId == userId; // Only owner can modify
 
