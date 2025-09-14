@@ -17,10 +17,10 @@ namespace AgileBoard.API
             
             if (!authResult.IsSuccess)
                 return HandleResult(authResult, _ => BadRequest());
-                
-            if (!authResult.Data!.Equals(true))
-                return Forbid(errorMessage);
-                
+
+            if (authResult.Data is bool canAccess && !canAccess)
+                return StatusCode(403, errorMessage);
+
             return null;
         }
 

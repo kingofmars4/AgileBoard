@@ -1,7 +1,6 @@
 ﻿using AgileBoard.API;
 using AgileBoard.API.DTOs;
 using AgileBoard.Domain.Constants;
-using AgileBoard.Services.Security.Interfaces;
 using AgileBoard.Services.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
