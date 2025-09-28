@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgileBoard.Infrastructure.Repositories.Implementations
 {
+#pragma warning disable CS8603
     public class UserRepository(AgileBoardDbContext context) 
         : IUserRepository
     {

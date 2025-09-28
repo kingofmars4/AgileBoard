@@ -3,14 +3,9 @@ using AgileBoard.Infrastructure.Repositories.Interfaces;
 
 namespace AgileBoard.Infrastructure.Repositories.Implementations
 {
-    public class ProjectRepository : IProjectRepository
+    public class ProjectRepository(AgileBoardDbContext context) : IProjectRepository
     {
-        private readonly AgileBoardDbContext _context;
-
-        public ProjectRepository(AgileBoardDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AgileBoardDbContext _context = context;
 
         public async Task<Project> GetProjectByIdAsync(int id)
         {

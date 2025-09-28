@@ -2,11 +2,16 @@
 {
     public static class Messages
     {
-        public static class Authorization
+        public static class Generic
         {
-            public const string CheckFailed = "Authorization check failed.";
-            public const string AccessDenied = "Access denied.";
+            public const string InternalServerError = "An internal server error occurred. Please try again later.";
+            public const string BadRequestGeneric = "The request is invalid. Please check your input.";
+            public const string UnauthorizedGeneric = "You are not authorized to perform this action.";
+            public const string NotFoundGeneric = "The requested resource was not found.";
+            public static string NotFound(string entityName) => $"Could not find {entityName}.";
+            public static string NotFoundPlural(string entityName) => $"No {entityName} found.";
         }
+
         public static class Authentication
         {
             public const string InvalidCredentials = "Invalid username or password.";
@@ -21,6 +26,7 @@
             public const string UsernamePasswordEmailRequired = "Username, email, and password must be provided.";
             public const string UsernameAlreadyExists = "Username already exists.";
             public const string EmailAlreadyExists = "Email already exists.";
+            public const string TagnameAlreadyExists = "Tag name already exists.";
         }
 
         public static class UserUpdate
@@ -41,23 +47,17 @@
             public const string NoPermissionToChangePassword = "You do not have permission to change this password.";
         }
 
-        public static class ProjectRetrieval
+        public static class Tags
         {
-            public const string ProjectNotFound = "Project not found.";
-            public const string ProjectRetrievalErrorGeneric = "An error occurred while retrieving project information.";
-        }
-        public static class UserRetrieval
-        {
-            public const string UserNotFound = "User not found.";
-            public const string UsersNotFound = "No users found.";
-            public const string UserRetrievalErrorGeneric = "An error occurred while retrieving user information.";
+            public const string TagNameRequired = "Tag name is required.";
+            public const string TagCreatedSuccessfully = "Tag created successfully.";
+            public const string TagUpdatedSuccessfully = "Tag updated successfully.";
+            public const string TagDeletedSuccessfully = "Tag deleted successfully.";
         }
 
-        public static class UserDeletion
+        public static class TagUpdate
         {
-            public const string UserDeletedSuccessfully = "User deleted successfully.";
-            public const string UserDeletionErrorGeneric = "An error occurred while deleting the user.";
-            public const string CannotDeleteUserWithProjects = "Cannot delete user who owns active projects.";
+            public const string NoNameSpecified = "Tag name must be provided for update.";
         }
 
         public static class Validation
@@ -69,12 +69,18 @@
             public const string PasswordComplexityRequirements = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
         }
 
-        public static class Generic
+        public static class EntityNames
         {
-            public const string InternalServerError = "An internal server error occurred. Please try again later.";
-            public const string BadRequestGeneric = "The request is invalid. Please check your input.";
-            public const string UnauthorizedGeneric = "You are not authorized to perform this action.";
-            public const string NotFoundGeneric = "The requested resource was not found.";
+            public const string User = "User";
+            public const string Users = "users";
+            public const string Tag = "Tag"; 
+            public const string Tags = "tags";
+            public const string Project = "Project";
+            public const string Projects = "projects";
+            public const string WorkItem = "Work Item";
+            public const string WorkItems = "work items";
+            public const string Sprint = "Sprint";
+            public const string Sprints = "sprints";
         }
     }
 }

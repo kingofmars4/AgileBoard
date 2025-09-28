@@ -29,13 +29,8 @@ namespace AgileBoard.Tests.Base
             using var scope = _factory.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AgileBoardDbContext>();
 
+            await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
-
-            if (context.Users.Any())
-            {
-                context.Users.RemoveRange(context.Users);
-                await context.SaveChangesAsync();
-            }
 
             AuthenticationHelper.ClearAuthorizationHeader(_client);
             

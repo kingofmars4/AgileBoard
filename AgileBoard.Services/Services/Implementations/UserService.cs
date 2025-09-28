@@ -32,7 +32,7 @@ namespace AgileBoard.Services.Services.Implementations
         {
             var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
-                return Result<User>.NotFound(Messages.UserRetrieval.UserNotFound);
+                return Result<User>.NotFound(Messages.EntityNames.User);
 
             return Result<User>.Success(user);
         }
@@ -41,7 +41,7 @@ namespace AgileBoard.Services.Services.Implementations
         {
             var user = await _userRepository.GetUserByUserameAsync(username);
             if (user == null)
-                return Result<User>.NotFound(Messages.UserRetrieval.UserNotFound);
+                return Result<User>.NotFound(Messages.EntityNames.User);
 
             return Result<User>.Success(user);
         }
@@ -50,7 +50,7 @@ namespace AgileBoard.Services.Services.Implementations
         {
             var users = await _userRepository.GetAllUsersAsync();
             if (!users.Any())
-                return Result<IEnumerable<User>>.NotFound(Messages.UserRetrieval.UsersNotFound);
+                return Result<IEnumerable<User>>.NotFound(Messages.EntityNames.Users, isPlural: true);
 
             return Result<IEnumerable<User>>.Success(users);
         }
@@ -91,7 +91,7 @@ namespace AgileBoard.Services.Services.Implementations
             {
                 var updatedUser = await _userRepository.UpdateUserAsync(id, username, email);
                 if (updatedUser == null)
-                    return Result<User>.NotFound(Messages.UserRetrieval.UserNotFound);
+                    return Result<User>.NotFound(Messages.EntityNames.User);
 
                 return Result<User>.Success(updatedUser);
             }
@@ -102,7 +102,7 @@ namespace AgileBoard.Services.Services.Implementations
         {
             var user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
-                return Result.NotFound(Messages.UserRetrieval.UserNotFound);
+                return Result.NotFound(Messages.EntityNames.User);
 
             if (newPassword.Length < 6)
                 return Result.BadRequest(Messages.PasswordChange.PasswordMinimumLength);
@@ -121,7 +121,7 @@ namespace AgileBoard.Services.Services.Implementations
             }
             catch (Exception)
             {
-                return Result.Failure("Database error occurred");
+                return Result.Failure(Messages.Generic.InternalServerError);
             }
         }
     }

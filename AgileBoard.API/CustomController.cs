@@ -10,7 +10,7 @@ namespace AgileBoard.API
     {
         protected async Task<IActionResult?> CheckAuthorizationAsync<T>(
             Func<int, Task<Result<T>>> authCheck, 
-            string errorMessage = Messages.Authorization.AccessDenied)
+            string errorMessage = Messages.Generic.UnauthorizedGeneric)
         {
             var currentUserId = GetCurrentUserId();
             var authResult = await authCheck(currentUserId);
