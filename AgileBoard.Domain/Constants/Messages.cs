@@ -82,5 +82,21 @@
             public const string Sprint = "Sprint";
             public const string Sprints = "sprints";
         }
+
+        public static class Projects
+        {
+            public const string ProjectNameRequired = "Project name is required.";
+            public const string ProjectCreatedSuccessfully = "Project created successfully.";
+            public const string ProjectUpdatedSuccessfully = "Project updated successfully.";
+            public const string ProjectDeletedSuccessfully = "Project deleted successfully.";
+            public const string CannotDeleteProjectWithWorkItems = "Cannot delete project with existing work items.";
+        }
+
+        public static class ProjectUpdate
+        {
+            public const string NoFieldsSpecified = "At least one field must be provided for update.";
+            public const string NoPermissionToUpdate = "You do not have permission to update this project.";
+            public const string NoPermissionToDelete = "You do not have permission to delete this project.";
+        }
     }
 }
