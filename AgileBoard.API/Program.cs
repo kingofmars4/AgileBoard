@@ -55,6 +55,10 @@ builder.Services.AddAuthorization();
     builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
     builder.Services.AddScoped<IProjectService, ProjectService>();
 
+    // TAGS
+    builder.Services.AddScoped<ITagRepository, TagRepository>();
+    builder.Services.AddScoped<ITagService, TagService>();
+
 // CONFIG
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();

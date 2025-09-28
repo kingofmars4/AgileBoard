@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgileBoard.Infrastructure.Repositories.Implementations
 {
-#pragma warning disable CS8603
     public class TagRepository(AgileBoardDbContext context) 
         : ITagRepository
     {
@@ -32,13 +31,13 @@ namespace AgileBoard.Infrastructure.Repositories.Implementations
             return newTag;
         }
 
-        public async Task<Tag> UpdateTagAsync(int id, string? name)
+        public async Task<Tag?> UpdateTagAsync(int id, string? name)
         {
             if (!string.IsNullOrEmpty(name))
+            {
                 await _context.Tags.Where(t => t.Id == id)
-                    .ExecuteUpdateAsync(t => t
-                        .SetProperty(t => t.Name, name)
-                    );
+                    .ExecuteUpdateAsync(t => t.SetProperty(t => t.Name, name));
+            }
 
             return await GetTagByIdAsync(id);
         }

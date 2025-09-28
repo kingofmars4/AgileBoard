@@ -9,13 +9,17 @@ namespace AgileBoard.API.Mappers
         public MappingProfile()
         {
             // USERS
-            CreateMap<CreateUserDTO, User>();
             CreateMap<User, UserDTO>();
+            CreateMap<CreateUserDTO, User>();
 
             // PROJECTS
             CreateMap<Project, ProjectDTO>();
             CreateMap<CreateProjectDTO, Project>();
 
+            // TAGS
+            CreateMap<Tag, TagDTO>();
+            CreateMap<CreateTagDTO, Tag>();
+            CreateMap<UpdateTagDTO, Tag>();
         }
     }
 }

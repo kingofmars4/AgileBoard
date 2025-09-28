@@ -32,6 +32,7 @@ namespace AgileBoard.Services.Services.Implementations
         public async Task<Result<IEnumerable<Tag>>> GetAllTagsAsync()
         {
             var tags = await _tagRepository.GetAllTagsAsync();
+
             if (!tags.Any())
                 return Result<IEnumerable<Tag>>.NotFound(Messages.EntityNames.Tags, isPlural: true);
 
