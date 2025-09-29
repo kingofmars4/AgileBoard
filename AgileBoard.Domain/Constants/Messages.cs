@@ -8,6 +8,7 @@
             public const string BadRequestGeneric = "The request is invalid. Please check your input.";
             public const string UnauthorizedGeneric = "You are not authorized to perform this action.";
             public const string NotFoundGeneric = "The requested resource was not found.";
+            
             public static string NotFound(string entityName) => $"Could not find {entityName}.";
             public static string NotFoundPlural(string entityName) => $"No {entityName} found.";
         }
@@ -27,6 +28,7 @@
             public const string UsernameAlreadyExists = "Username already exists.";
             public const string EmailAlreadyExists = "Email already exists.";
             public const string TagnameAlreadyExists = "Tag name already exists.";
+            public const string ProjectNameAlreadyExists = "Project name already exists.";
         }
 
         public static class UserUpdate
@@ -60,6 +62,46 @@
             public const string NoNameSpecified = "Tag name must be provided for update.";
         }
 
+        public static class Projects
+        {
+            public const string ProjectNameRequired = "Project name is required.";
+            public const string ProjectCreatedSuccessfully = "Project created successfully.";
+            public const string ProjectUpdatedSuccessfully = "Project updated successfully.";
+            public const string ProjectDeletedSuccessfully = "Project deleted successfully.";
+            public const string CannotDeleteProjectWithWorkItems = "Cannot delete project with existing work items.";
+            
+            public const string NoProjectsFoundForUser = "No projects found for current user.";
+            public const string ProjectDeleteFailed = "Failed to delete project.";
+            
+            public static string ProjectNameExists(string name) => $"Project with name '{name}' already exists.";
+        }
+
+        public static class ProjectUpdate
+        {
+            public const string NoFieldsSpecified = "At least one field must be provided for update.";
+            public const string NoPermissionToUpdate = "You do not have permission to update this project.";
+            public const string NoPermissionToDelete = "You do not have permission to delete this project.";
+            
+            public const string NoPermissionToAccess = "You do not have permission to access this project.";
+            public const string OnlyOwnerCanUpdate = "Only project owner can update the project.";
+            public const string OnlyOwnerCanDelete = "Only project owner can delete the project.";
+            public const string OnlyOwnerCanAddParticipants = "Only project owner can add participants.";
+            public const string OnlyOwnerCanRemoveParticipants = "Only project owner can remove participants.";
+        }
+
+        public static class Participants
+        {
+            public const string AddParticipantSuccess = "Participant added successfully.";
+            public const string RemoveParticipantSuccess = "Participant removed successfully.";
+            public const string ParticipantAlreadyExists = "User is already a participant in this project.";
+            public const string ParticipantNotFound = "User is not a participant in this project.";
+            public const string CannotAddOwnerAsParticipant = "Project owner cannot be added as participant.";
+            public const string CannotRemoveOwnerFromParticipants = "Project owner cannot be removed from participants.";
+            
+            public const string AddParticipantFailed = "Failed to add participant. Project or user may not exist, or user may already be a participant.";
+            public const string RemoveParticipantFailed = "Failed to remove participant. Project may not exist or user may not be a participant.";
+        }
+
         public static class Validation
         {
             public const string InvalidEmailFormat = "Email format is invalid.";
@@ -67,6 +109,10 @@
             public const string UsernameMaximumLength = "Username cannot exceed 50 characters.";
             public const string EmailMaximumLength = "Email cannot exceed 100 characters.";
             public const string PasswordComplexityRequirements = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+            
+            public const string ProjectNameMinimumLength = "Project name must be at least 3 characters long.";
+            public const string ProjectNameMaximumLength = "Project name cannot exceed 100 characters.";
+            public const string ProjectDescriptionMaximumLength = "Project description cannot exceed 500 characters.";
         }
 
         public static class EntityNames
@@ -81,6 +127,8 @@
             public const string WorkItems = "work items";
             public const string Sprint = "Sprint";
             public const string Sprints = "sprints";
+            public const string Participant = "Participant";
+            public const string Participants = "participants";
         }
     }
 }
