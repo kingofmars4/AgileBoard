@@ -70,6 +70,9 @@
             public const string ProjectDeletedSuccessfully = "Project deleted successfully.";
             public const string CannotDeleteProjectWithWorkItems = "Cannot delete project with existing work items.";
             
+            public const string NoProjectsFoundForUser = "No projects found for current user.";
+            public const string ProjectDeleteFailed = "Failed to delete project.";
+            
             public static string ProjectNameExists(string name) => $"Project with name '{name}' already exists.";
         }
 
@@ -78,7 +81,12 @@
             public const string NoFieldsSpecified = "At least one field must be provided for update.";
             public const string NoPermissionToUpdate = "You do not have permission to update this project.";
             public const string NoPermissionToDelete = "You do not have permission to delete this project.";
+            
             public const string NoPermissionToAccess = "You do not have permission to access this project.";
+            public const string OnlyOwnerCanUpdate = "Only project owner can update the project.";
+            public const string OnlyOwnerCanDelete = "Only project owner can delete the project.";
+            public const string OnlyOwnerCanAddParticipants = "Only project owner can add participants.";
+            public const string OnlyOwnerCanRemoveParticipants = "Only project owner can remove participants.";
         }
 
         public static class Participants
