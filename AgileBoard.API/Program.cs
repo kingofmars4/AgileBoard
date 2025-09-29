@@ -51,13 +51,17 @@ builder.Services.AddAuthorization();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IUserService, UserService>();
 
-    // PROJECTS
-    builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
-    builder.Services.AddScoped<IProjectService, ProjectService>();
-
     // TAGS
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ITagService, TagService>();
+
+    // WORKITEMS
+    builder.Services.AddScoped<IWorkItemRepository, WorkItemRepository>();
+    builder.Services.AddScoped<IWorkItemService, WorkItemService>();
+
+    // PROJECTS
+    builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+    builder.Services.AddScoped<IProjectService, ProjectService>();
 
 // CONFIG
 builder.Services.AddAutoMapper(typeof(MappingProfile));
