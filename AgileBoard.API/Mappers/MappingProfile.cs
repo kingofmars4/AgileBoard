@@ -48,6 +48,22 @@ namespace AgileBoard.API.Mappers
 
             CreateMap<UpdateWorkItemDTO, WorkItem>()
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State ?? WorkItemState.ToDo));
+
+            // SPRINTS
+            CreateMap<Sprint, SprintDTO>()
+                .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(src => src.Project != null ? src.Project.Name : "Unknown"))
+                .ForMember(dest => dest.WorkItems, opt => opt.MapFrom(src => src.WorkItems ?? new List<WorkItem>()))
+                .ForMember(dest => dest.WorkItemCount, opt => opt.MapFrom(src => src.WorkItems != null ? src.WorkItems.Count() : 0))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => DateTime.UtcNow >= src.StartDate && DateTime.UtcNow <= src.EndDate))
+                .ForMember(dest => dest.DurationInDays, opt => opt.MapFrom(src => (src.EndDate - src.StartDate).Days + 1));
+
+            CreateMap<Sprint, SprintSummaryDTO>()
+                .ForMember(dest => dest.WorkItemCount, opt => opt.MapFrom(src => src.WorkItems != null ? src.WorkItems.Count() : 0))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => DateTime.UtcNow >= src.StartDate && DateTime.UtcNow <= src.EndDate))
+                .ForMember(dest => dest.DurationInDays, opt => opt.MapFrom(src => (src.EndDate - src.StartDate).Days + 1));
+
+            CreateMap<CreateSprintDTO, Sprint>();
+            CreateMap<UpdateSprintDTO, Sprint>();
         }
     }
 }
