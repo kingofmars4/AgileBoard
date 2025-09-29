@@ -59,9 +59,14 @@ builder.Services.AddAuthorization();
     builder.Services.AddScoped<IWorkItemRepository, WorkItemRepository>();
     builder.Services.AddScoped<IWorkItemService, WorkItemService>();
 
+    // SPRINTS
+    builder.Services.AddScoped<ISprintRepository, SprintRepository>();
+    builder.Services.AddScoped<ISprintService, SprintService>();
+
     // PROJECTS
     builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
     builder.Services.AddScoped<IProjectService, ProjectService>();
+
 
 // CONFIG
 builder.Services.AddAutoMapper(typeof(MappingProfile));

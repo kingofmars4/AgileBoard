@@ -145,6 +145,31 @@
             public const string RemoveTagFailed = "Failed to remove tag from work item.";
         }
 
+        public static class Sprints
+        {
+            public const string SprintNameRequired = "Sprint name is required.";
+            public const string SprintCreatedSuccessfully = "Sprint created successfully.";
+            public const string SprintUpdatedSuccessfully = "Sprint updated successfully.";
+            public const string SprintDeletedSuccessfully = "Sprint deleted successfully.";
+            public const string StartDateRequired = "Start date is required.";
+            public const string EndDateRequired = "End date is required.";
+            public const string EndDateMustBeAfterStartDate = "End date must be after start date.";
+            public const string SprintCannotStartInPast = "Sprint cannot start in the past.";
+            public const string NoSprintsFoundForProject = "No sprints found for this project.";
+            public const string CannotDeleteSprintWithWorkItems = "Cannot delete sprint with existing work items.";
+            
+            public static string SprintNameExists(string name) => $"Sprint with name '{name}' already exists in this project.";
+        }
+
+        public static class SprintUpdate
+        {
+            public const string NoFieldsSpecified = "At least one field must be provided for update.";
+            public const string NoPermissionToUpdate = "You do not have permission to update this sprint.";
+            public const string NoPermissionToDelete = "You do not have permission to delete this sprint.";
+            public const string NoPermissionToAccess = "You do not have permission to access this sprint.";
+            public const string OnlyProjectMembersCanModify = "Only project owner and participants can modify sprints.";
+        }
+
         public static class Validation
         {
             public const string InvalidEmailFormat = "Email format is invalid.";
@@ -160,6 +185,12 @@
             public const string WorkItemNameMinimumLength = "Work item name must be at least 3 characters long.";
             public const string WorkItemNameMaximumLength = "Work item name cannot exceed 200 characters.";
             public const string WorkItemDescriptionMaximumLength = "Work item description cannot exceed 1000 characters.";
+
+            public const string SprintNameMinimumLength = "Sprint name must be at least 3 characters long.";
+            public const string SprintNameMaximumLength = "Sprint name cannot exceed 100 characters.";
+            public const string SprintDescriptionMaximumLength = "Sprint description cannot exceed 500 characters.";
+            public const string SprintDurationTooShort = "Sprint duration must be at least 1 day.";
+            public const string SprintDurationTooLong = "Sprint duration cannot exceed 4 weeks.";
         }
 
         public static class EntityNames
