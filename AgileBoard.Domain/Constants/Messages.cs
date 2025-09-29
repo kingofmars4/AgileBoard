@@ -102,6 +102,49 @@
             public const string RemoveParticipantFailed = "Failed to remove participant. Project may not exist or user may not be a participant.";
         }
 
+        public static class WorkItems
+        {
+            public const string WorkItemNameRequired = "Work item name is required.";
+            public const string WorkItemCreatedSuccessfully = "Work item created successfully.";
+            public const string WorkItemUpdatedSuccessfully = "Work item updated successfully.";
+            public const string WorkItemDeletedSuccessfully = "Work item deleted successfully.";
+            public const string WorkItemMovedSuccessfully = "Work item moved successfully.";
+            public const string InvalidWorkItemState = "Invalid work item state.";
+            public const string ProjectIdRequired = "Project ID is required.";
+            public const string InvalidIndex = "Invalid index value.";
+            public const string NoWorkItemsFoundForProject = "No work items found for this project.";
+        }
+
+        public static class WorkItemUpdate
+        {
+            public const string NoFieldsSpecified = "At least one field must be provided for update.";
+            public const string NoPermissionToUpdate = "You do not have permission to update this work item.";
+            public const string NoPermissionToDelete = "You do not have permission to delete this work item.";
+            public const string NoPermissionToAccess = "You do not have permission to access this work item.";
+            public const string OnlyProjectMembersCanModify = "Only project owner and participants can modify work items.";
+        }
+
+        public static class WorkItemAssignment
+        {
+            public const string UserAssignedSuccess = "User assigned to work item successfully.";
+            public const string UserUnassignedSuccess = "User unassigned from work item successfully.";
+            public const string UserAlreadyAssigned = "User is already assigned to this work item.";
+            public const string UserNotAssigned = "User is not assigned to this work item.";
+            public const string AssignmentFailed = "Failed to assign user to work item.";
+            public const string UnassignmentFailed = "Failed to unassign user from work item.";
+            public const string CannotAssignNonProjectMember = "Cannot assign user who is not a project member.";
+        }
+
+        public static class WorkItemTags
+        {
+            public const string TagAddedSuccess = "Tag added to work item successfully.";
+            public const string TagRemovedSuccess = "Tag removed from work item successfully.";
+            public const string TagAlreadyAdded = "Tag is already added to this work item.";
+            public const string TagNotFound = "Tag not found on this work item.";
+            public const string AddTagFailed = "Failed to add tag to work item.";
+            public const string RemoveTagFailed = "Failed to remove tag from work item.";
+        }
+
         public static class Validation
         {
             public const string InvalidEmailFormat = "Email format is invalid.";
@@ -113,6 +156,10 @@
             public const string ProjectNameMinimumLength = "Project name must be at least 3 characters long.";
             public const string ProjectNameMaximumLength = "Project name cannot exceed 100 characters.";
             public const string ProjectDescriptionMaximumLength = "Project description cannot exceed 500 characters.";
+            
+            public const string WorkItemNameMinimumLength = "Work item name must be at least 3 characters long.";
+            public const string WorkItemNameMaximumLength = "Work item name cannot exceed 200 characters.";
+            public const string WorkItemDescriptionMaximumLength = "Work item description cannot exceed 1000 characters.";
         }
 
         public static class EntityNames
