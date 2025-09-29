@@ -13,7 +13,8 @@ namespace AgileBoard.Infrastructure.Repositories.Implementations
             project.CreationDate = DateTime.UtcNow;
             await _context.Projects.AddAsync(project);
             await _context.SaveChangesAsync();
-            return project;
+            
+            return await GetProjectByIdAsync(project.Id) ?? project;
         }
 
         public async Task<Project?> GetProjectByIdAsync(int id)
@@ -58,15 +59,16 @@ namespace AgileBoard.Infrastructure.Repositories.Implementations
 
         public async Task<Project?> UpdateProjectAsync(int id, string? name, string? description)
         {
-            var updateQuery = _context.Projects.Where(p => p.Id == id);
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null) return null;
 
-            if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(description))
-            {
-                await updateQuery.ExecuteUpdateAsync(p => p
-                    .SetProperty(p => p.Name, name)
-                    .SetProperty(p => p.Description, description));
-            }
+            if (!string.IsNullOrEmpty(name))
+                project.Name = name;
 
+            if (!string.IsNullOrEmpty(description))
+                project.Description = description;
+
+            await _context.SaveChangesAsync();
             return await GetProjectByIdAsync(id);
         }
 

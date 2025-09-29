@@ -14,11 +14,11 @@ namespace AgileBoard.API.Mappers
 
             // PROJECTS
             CreateMap<Project, ProjectDTO>()
-                .ForMember(dest => dest.OwnerUsername, opt => opt.MapFrom(src => src.Owner!.Username))
-                .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants));
+                .ForMember(dest => dest.OwnerUsername, opt => opt.MapFrom(src => src.Owner != null ? src.Owner.Username : "Unknown"))
+                .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants ?? new List<User>()));
             
             CreateMap<Project, ProjectSummaryDTO>()
-                .ForMember(dest => dest.OwnerUsername, opt => opt.MapFrom(src => src.Owner!.Username))
+                .ForMember(dest => dest.OwnerUsername, opt => opt.MapFrom(src => src.Owner != null ? src.Owner.Username : "Unknown"))
                 .ForMember(dest => dest.ParticipantCount, opt => opt.MapFrom(src => src.Participants != null ? src.Participants.Count() : 0));
             
             CreateMap<CreateProjectDTO, Project>();

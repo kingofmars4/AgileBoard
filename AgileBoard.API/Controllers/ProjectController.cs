@@ -60,7 +60,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(authResult, _ => BadRequest());
                 
             if (!authResult.Data)
-                return Forbid(Messages.ProjectUpdate.NoPermissionToAccess);
+                return StatusCode(403, Messages.ProjectUpdate.NoPermissionToAccess);
 
             var result = await _projectService.GetProjectByIdAsync(id);
 
@@ -99,7 +99,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(authResult, _ => BadRequest());
                 
             if (!authResult.Data!)
-                return Forbid(Messages.ProjectUpdate.OnlyOwnerCanUpdate);
+                return StatusCode(403, Messages.ProjectUpdate.OnlyOwnerCanUpdate);
 
             var result = await _projectService.UpdateProjectAsync(id, updateProjectDto.Name, updateProjectDto.Description);
 
@@ -121,7 +121,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(authResult, _ => BadRequest());
                 
             if (!authResult.Data!)
-                return Forbid(Messages.ProjectUpdate.OnlyOwnerCanDelete);
+                return StatusCode(403, Messages.ProjectUpdate.OnlyOwnerCanDelete);
 
             var result = await _projectService.DeleteProjectAsync(id);
 
@@ -145,7 +145,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(authResult, _ => BadRequest());
                 
             if (!authResult.Data!)
-                return Forbid(Messages.ProjectUpdate.OnlyOwnerCanAddParticipants);
+                return StatusCode(403, Messages.ProjectUpdate.OnlyOwnerCanAddParticipants);
 
             var result = await _projectService.AddParticipantAsync(id, addParticipantDto.UserId);
 
@@ -169,7 +169,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(authResult, _ => BadRequest());
                 
             if (!authResult.Data!)
-                return Forbid(Messages.ProjectUpdate.OnlyOwnerCanRemoveParticipants);
+                return StatusCode(403, Messages.ProjectUpdate.OnlyOwnerCanRemoveParticipants);
 
             var result = await _projectService.RemoveParticipantAsync(id, userId);
 
@@ -193,7 +193,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(authResult, _ => BadRequest());
                 
             if (!authResult.Data!)
-                return Forbid(Messages.ProjectUpdate.NoPermissionToAccess);
+                return StatusCode(403, Messages.ProjectUpdate.NoPermissionToAccess);
 
             var result = await _projectService.GetProjectByIdAsync(id);
 
