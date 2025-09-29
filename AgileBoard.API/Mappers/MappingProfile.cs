@@ -47,7 +47,7 @@ namespace AgileBoard.API.Mappers
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State));
 
             CreateMap<UpdateWorkItemDTO, WorkItem>()
-                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.HasValue ? src.State.Value : WorkItemState.ToDo));
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State ?? WorkItemState.ToDo));
         }
     }
 }
