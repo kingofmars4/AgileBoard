@@ -56,7 +56,7 @@ namespace AgileBoard.Services.Services.Implementations
 
             var existingProject = await _projectRepository.GetProjectByNameAsync(name);
             if (existingProject != null)
-                return Result<Project>.Conflict($"Project with name '{name}' already exists.");
+                return Result<Project>.Conflict(Messages.Projects.ProjectNameExists(name));
 
             try
             {
@@ -119,7 +119,7 @@ namespace AgileBoard.Services.Services.Implementations
             {
                 var added = await _projectRepository.AddParticipantToProjectAsync(projectId, userId);
                 if (!added)
-                    return Result<bool>.BadRequest("Failed to add participant. Project or user may not exist, or user may already be a participant.");
+                    return Result<bool>.BadRequest(Messages.Participants.AddParticipantFailed);
 
                 return Result<bool>.Success(true);
             }
@@ -135,7 +135,7 @@ namespace AgileBoard.Services.Services.Implementations
             {
                 var removed = await _projectRepository.RemoveParticipantFromProjectAsync(projectId, userId);
                 if (!removed)
-                    return Result<bool>.BadRequest("Failed to remove participant. Project may not exist or user may not be a participant.");
+                    return Result<bool>.BadRequest(Messages.Participants.RemoveParticipantFailed);
 
                 return Result<bool>.Success(true);
             }
