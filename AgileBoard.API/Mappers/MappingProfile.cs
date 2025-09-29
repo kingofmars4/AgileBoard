@@ -1,6 +1,7 @@
 ﻿using AgileBoard.API.DTOs;
 using AgileBoard.Domain.Entities;
 using AutoMapper;
+using static AgileBoard.Domain.Entities.WorkItem;
 
 namespace AgileBoard.API.Mappers
 {
@@ -28,6 +29,25 @@ namespace AgileBoard.API.Mappers
             CreateMap<Tag, TagDTO>();
             CreateMap<CreateTagDTO, Tag>();
             CreateMap<UpdateTagDTO, Tag>();
+
+            // WORKITEMS
+            CreateMap<WorkItem, WorkItemDTO>()
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
+                .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(src => src.Project != null ? src.Project.Name : "Unknown"))
+                .ForMember(dest => dest.SprintName, opt => opt.MapFrom(src => src.Sprint != null ? src.Sprint.Name : null))
+                .ForMember(dest => dest.AssignedUsers, opt => opt.MapFrom(src => src.AssignedUsers ?? new List<User>()))
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags ?? new List<Tag>()));
+
+            CreateMap<WorkItem, WorkItemSummaryDTO>()
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
+                .ForMember(dest => dest.AssignedUsersCount, opt => opt.MapFrom(src => src.AssignedUsers != null ? src.AssignedUsers.Count() : 0))
+                .ForMember(dest => dest.TagsCount, opt => opt.MapFrom(src => src.Tags != null ? src.Tags.Count() : 0));
+
+            CreateMap<CreateWorkItemDTO, WorkItem>()
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State));
+
+            CreateMap<UpdateWorkItemDTO, WorkItem>()
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State ?? WorkItemState.ToDo));
         }
     }
 }

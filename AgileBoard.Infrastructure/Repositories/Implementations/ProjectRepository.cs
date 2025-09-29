@@ -93,7 +93,7 @@ namespace AgileBoard.Infrastructure.Repositories.Implementations
             
             if (project.Participants?.Any(u => u.Id == userId) == true) return false; // Already participant
             
-            project.Participants ??= new List<User>();
+            project.Participants ??= [];
             project.Participants.Add(user);
             
             await _context.SaveChangesAsync();
