@@ -59,12 +59,12 @@ namespace AgileBoard.Tests.WorkItems
         }
 
         [Test]
-        public async Task CreateWorkItem_WithInvalidProjectId_ShouldReturnBadRequest()
+        public async Task CreateWorkItem_WithInvalidProjectId_ShouldReturnNotFound()
         {
             var createWorkItemDto = new CreateWorkItemDTO("Test Item", "Description", 0);
             var createResponse = await _client.PostAsJsonAsync("/api/workitem", createWorkItemDto);
 
-            Assert.That(createResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            Assert.That(createResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
         [Test]

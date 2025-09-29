@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using IAuthorizationService = AgileBoard.Services.Security.Interfaces.IAuthorizationService;
 using AgileBoard.Domain.Constants;
 using AgileBoard.Domain.Entities;
+using static AgileBoard.Domain.Entities.WorkItem;
 
 namespace AgileBoard.API.Controllers
 {
@@ -93,7 +94,7 @@ namespace AgileBoard.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetWorkItemsByState(WorkItemState state)
         {
-            var domainState = (WorkItem.WorkItemState)state;
+            var domainState = state;
             var result = await _workItemService.GetWorkItemsByStateAsync(domainState);
 
             return HandleResult(result, workItems =>
@@ -129,7 +130,7 @@ namespace AgileBoard.API.Controllers
             if (!authResult.Data)
                 return StatusCode(403, Messages.WorkItemUpdate.OnlyProjectMembersCanModify);
 
-            var domainState = (WorkItem.WorkItemState)createWorkItemDto.State;
+            var domainState = createWorkItemDto.State;
             var result = await _workItemService.CreateWorkItemAsync(
                 createWorkItemDto.Name, 
                 createWorkItemDto.Description, 
@@ -153,7 +154,7 @@ namespace AgileBoard.API.Controllers
                 return HandleResult(workItemResult, _ => NotFound());
 
             var currentUserId = GetCurrentUserId();
-            var authResult = await _authService.CanModifyProjectAsync(currentUserId, workItemResult.Data!.ProjectId);
+            var authResult = await _authService.CanAccessProjectAsync(currentUserId, workItemResult.Data!.ProjectId);
             
             if (!authResult.IsSuccess)
                 return HandleResult(authResult, _ => BadRequest());
@@ -161,7 +162,7 @@ namespace AgileBoard.API.Controllers
             if (!authResult.Data)
                 return StatusCode(403, Messages.WorkItemUpdate.OnlyProjectMembersCanModify);
 
-            var domainState = updateWorkItemDto.State.HasValue ? (WorkItem.WorkItemState)updateWorkItemDto.State.Value : (WorkItem.WorkItemState?)null;
+            var domainState = updateWorkItemDto.State ?? null;
             var result = await _workItemService.UpdateWorkItemAsync(
                 id,
                 updateWorkItemDto.Name,
