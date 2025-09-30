@@ -190,5 +190,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **David Rodrigues** - Back-End Developer
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/david-rodrigues-9493bb378)
+- LinkedIn: [david-rodrigues](https://linkedin.com/in/david-rodrigues-9493bb378)
 - GitHub: [@kingofmars4](https://github.com/kingofmars4)
