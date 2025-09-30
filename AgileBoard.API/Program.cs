@@ -71,6 +71,11 @@ builder.Services.AddAuthorization();
 // CONFIG
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
+
+// HEALTH CHECKS
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AgileBoardDbContext>();
+
 builder.Services.AddEndpointsApiExplorer();
 
 // SWAGGER CONFIG
@@ -129,6 +134,7 @@ if (app.Environment.IsDevelopment())
     app.MapGet("/", () => Results.Redirect("/swagger"));
 }
 
+app.MapHealthChecks("/health");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
